@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}
+            Expense Tracker
+        {% endblock %}
+    </title>
+
+
+    <!-- =====================================================
+         BOOTSTRAP ICONS
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+
+    <style>
+
+        /* =====================================================
+           GLOBAL RESET
+           ===================================================== */
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        body {
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f8fafc 0%,
+                    #f1f5f9 100%
+                );
+
+            color: #1f2937;
+
+            min-height: 100vh;
+        }
+
+
+        /* =====================================================
+           NAVIGATION BAR
+           ===================================================== */
+
+        nav {
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1000;
+
+            width: 100%;
+
+            min-height: 68px;
+
+            padding: 12px 30px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4f46e5,
+                    #6366f1
+                );
+
+            color: white;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 20px;
+
+            box-shadow:
+                0 4px 18px rgba(15, 23, 42, 0.12);
+        }
+
+
+        /* =====================================================
+           BRAND
+           ===================================================== */
+
+        .nav-brand {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            color: white;
+
+            text-decoration: none;
+
+            flex-shrink: 0;
+        }
+
+
+        .nav-brand-icon {
+            width: 38px;
+
+            height: 38px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 10px;
+
+            background:
+                rgba(255, 255, 255, 0.16);
+
+            font-size: 19px;
+        }
+
+
+        nav h2 {
+            margin: 0;
+
+            font-size: 20px;
+
+            font-weight: 750;
+
+            letter-spacing: -0.2px;
+        }
+
+
+        /* =====================================================
+           NAVIGATION RIGHT SIDE
+           ===================================================== */
+
+        .nav-right {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            min-width: 0;
+        }
+
+
+        .welcome-text {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            color: rgba(255, 255, 255, 0.92);
+
+            font-size: 14px;
+
+            margin-right: 5px;
+
+            white-space: nowrap;
+        }
+
+
+        /* =====================================================
+           NAVIGATION LINKS
+           ===================================================== */
+
+        nav a {
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            padding: 9px 12px;
+
+            border-radius: 8px;
+
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease;
+        }
+
+
+        nav a:hover {
+            color: white;
+
+            background:
+                rgba(255, 255, 255, 0.14);
+
+            transform: translateY(-1px);
+        }
+
+
+        /* =====================================================
+           LOGOUT BUTTON
+           ===================================================== */
+
+        .logout-form {
+            display: inline-flex;
+        }
+
+
+        .logout-btn {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            background:
+                rgba(255, 255, 255, 0.12);
+
+            color: white;
+
+            border: 1px solid
+                rgba(255, 255, 255, 0.20);
+
+            padding: 9px 13px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease;
+        }
+
+
+        .logout-btn:hover {
+            background:
+                rgba(255, 255, 255, 0.22);
+
+            transform: translateY(-1px);
+        }
+
+
+        /* =====================================================
+           MAIN CONTAINER
+           ===================================================== */
+
+        .container {
+            width: 100%;
+
+            max-width: 1250px;
+
+            margin: 0 auto;
+
+            padding: 30px 20px 50px;
+        }
+
+
+        /* =====================================================
+           CARDS
+           ===================================================== */
+
+        .card {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 16px;
+
+            border: 1px solid #edf0f5;
+
+            box-shadow:
+                0 8px 25px
+                rgba(15, 23, 42, 0.06);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+
+        .card:hover {
+            box-shadow:
+                0 12px 30px
+                rgba(15, 23, 42, 0.08);
+        }
+
+
+        /* =====================================================
+           FORM ELEMENTS
+           ===================================================== */
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+
+            padding: 11px 13px;
+
+            margin-top: 6px;
+
+            margin-bottom: 15px;
+
+            border: 1px solid #dbe1ea;
+
+            border-radius: 9px;
+
+            background: white;
+
+            color: #1f2937;
+
+            font-family: inherit;
+
+            font-size: 14px;
+
+            outline: none;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+
+        input:hover,
+        select:hover,
+        textarea:hover {
+            border-color: #b9c2d0;
+        }
+
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #6366f1;
+
+            box-shadow:
+                0 0 0 4px
+                rgba(99, 102, 241, 0.10);
+        }
+
+
+        textarea {
+            min-height: 100px;
+
+            resize: vertical;
+        }
+
+
+        /* =====================================================
+           BUTTONS
+           ===================================================== */
+
+        button {
+            background:
+                linear-gradient(
+                    135deg,
+                    #4f46e5,
+                    #6366f1
+                );
+
+            color: white;
+
+            border: none;
+
+            padding: 10px 18px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-family: inherit;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+        }
+
+
+        button:hover {
+            background:
+                linear-gradient(
+                    135deg,
+                    #4338ca,
+                    #4f46e5
+                );
+
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 5px 14px
+                rgba(79, 70, 229, 0.20);
+        }
+
+
+        button:active {
+            transform: translateY(0);
+        }
+
+
+        /* =====================================================
+           ERROR / MESSAGE
+           ===================================================== */
+
+        .error {
+            color: #dc2626;
+
+            margin-bottom: 10px;
+
+            font-size: 14px;
+        }
+
+
+        .message {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 12px 15px;
+
+            margin-bottom: 18px;
+
+            background: #ecfdf3;
+
+            color: #166534;
+
+            border: 1px solid #bbf7d0;
+
+            border-radius: 10px;
+
+            font-size: 14px;
+
+            box-shadow:
+                0 4px 12px
+                rgba(15, 23, 42, 0.04);
+        }
+
+
+        /* =====================================================
+           MOBILE NAVIGATION
+           ===================================================== */
+
+        @media (max-width: 750px) {
+
+            nav {
+                padding: 12px 18px;
+
+                min-height: auto;
+
+                align-items: flex-start;
+            }
+
+
+            .nav-right {
+                flex-wrap: wrap;
+
+                justify-content: flex-end;
+            }
+
+
+            .welcome-text {
+                display: none;
+            }
+
+
+            nav a {
+                padding: 8px 9px;
+
+                font-size: 13px;
+            }
+
+
+            .logout-btn {
+                padding: 8px 10px;
+
+                font-size: 13px;
+            }
+
+
+            .container {
+                padding:
+                    22px 15px 40px;
+            }
+
+        }
+
+
+        /* =====================================================
+           SMALL MOBILE DEVICES
+           ===================================================== */
+
+        @media (max-width: 500px) {
+
+            nav {
+                flex-direction: column;
+
+                align-items: stretch;
+
+                gap: 10px;
+            }
+
+
+            .nav-brand {
+                justify-content: center;
+            }
+
+
+            .nav-right {
+                width: 100%;
+
+                justify-content: center;
+
+                gap: 5px;
+            }
+
+
+            nav a {
+                font-size: 12px;
+
+                padding: 7px 8px;
+            }
+
+
+            .logout-btn {
+                font-size: 12px;
+
+                padding: 7px 9px;
+            }
+
+
+            .container {
+                padding:
+                    18px 12px 35px;
+            }
+
+
+            .card {
+                padding: 18px;
+
+                border-radius: 13px;
+            }
+
+        }
+
+
+        /* =====================================================
+           EXTRA SMALL DEVICES
+           ===================================================== */
+
+        @media (max-width: 360px) {
+
+            nav h2 {
+                font-size: 18px;
+            }
+
+
+            .nav-brand-icon {
+                width: 34px;
+
+                height: 34px;
+
+                font-size: 17px;
+            }
+
+
+            .nav-right {
+                gap: 2px;
+            }
+
+
+            nav a {
+                font-size: 11px;
+
+                padding: 6px;
+            }
+
+
+            .logout-btn {
+                font-size: 11px;
+
+                padding: 6px 7px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     NAVIGATION
+     ========================================================= -->
+
+<nav>
+
+    <!-- Brand -->
+
+    <a
+        href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'login' %}{% endif %}"
+        class="nav-brand"
+    >
+
+        <div class="nav-brand-icon">
+
+            <i class="bi bi-wallet2"></i>
+
+        </div>
+
+        <h2>
+            Expense Tracker
+        </h2>
+
+    </a>
+
+
+    <!-- Navigation Right -->
+
+    <div class="nav-right">
+
+        {% if user.is_authenticated %}
+
+            <span class="welcome-text">
+
+                <i class="bi bi-person-circle"></i>
+
+                Hello, {{ user.username }}
+
+            </span>
+
+
+            <a href="{% url 'dashboard' %}">
+
+                <i class="bi bi-grid-1x2-fill"></i>
+
+                Dashboard
+
+            </a>
+
+
+            <form
+                method="post"
+                action="{% url 'logout' %}"
+                class="logout-form"
+            >
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="logout-btn"
+                >
+
+                    <i class="bi bi-box-arrow-right"></i>
+
+                    Logout
+
+                </button>
+
+            </form>
+
+
+        {% else %}
+
+
+            <a href="{% url 'login' %}">
+
+                <i class="bi bi-box-arrow-in-right"></i>
+
+                Login
+
+            </a>
+
+
+            <a href="{% url 'register' %}">
+
+                <i class="bi bi-person-plus"></i>
+
+                Register
+
+            </a>
+
+
+        {% endif %}
+
+    </div>
+
+</nav>
+
+
+<!-- =========================================================
+     MAIN CONTENT
+     ========================================================= -->
+
+<div class="container">
+
+
+    <!-- Django Messages -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="message">
+
+                <i class="bi bi-check-circle-fill"></i>
+
+                <span>
+                    {{ message }}
+                </span>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <!-- Page Content -->
+
+    {% block content %}
+
+    {% endblock %}
+
+
+</div>
+
+
+</body>
+
+</html>

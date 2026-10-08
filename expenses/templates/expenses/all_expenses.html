@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>All Expenses | Expense Tracker</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+
+        body {
+            min-height: 100vh;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f4f7fb 0%,
+                    #eef2ff 100%
+                );
+
+            color: #1f2937;
+        }
+
+
+        /* =========================
+           MAIN CONTAINER
+        ========================= */
+
+        .container {
+            max-width: 1250px;
+
+            margin: 0 auto;
+
+            padding: 40px 20px;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 20px;
+
+            margin-bottom: 28px;
+        }
+
+
+        .header-left {
+            display: flex;
+
+            align-items: center;
+
+            gap: 16px;
+        }
+
+
+        .page-icon {
+            width: 54px;
+            height: 54px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background: #4f46e5;
+
+            color: white;
+
+            border-radius: 14px;
+
+            font-size: 25px;
+
+            box-shadow:
+                0 8px 20px
+                rgba(79, 70, 229, 0.25);
+        }
+
+
+        .header h1 {
+            margin-bottom: 6px;
+
+            color: #111827;
+
+            font-size: 28px;
+        }
+
+
+        .header p {
+            color: #6b7280;
+
+            font-size: 14px;
+        }
+
+
+        .header-buttons {
+            display: flex;
+
+            gap: 10px;
+        }
+
+
+        .back-btn,
+        .add-btn {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            min-height: 42px;
+
+            padding: 10px 17px;
+
+            border-radius: 9px;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            transition:
+                0.2s ease;
+        }
+
+
+        .back-btn {
+            background: #374151;
+
+            color: white;
+        }
+
+
+        .back-btn:hover {
+            background: #1f2937;
+
+            transform: translateY(-1px);
+        }
+
+
+        .add-btn {
+            background: #4f46e5;
+
+            color: white;
+
+            box-shadow:
+                0 5px 12px
+                rgba(79, 70, 229, 0.18);
+        }
+
+
+        .add-btn:hover {
+            background: #4338ca;
+
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 7px 16px
+                rgba(79, 70, 229, 0.25);
+        }
+
+
+        /* =========================
+           SEARCH CARD
+        ========================= */
+
+        .search-card {
+            background: white;
+
+            padding: 24px;
+
+            border-radius: 16px;
+
+            border: 1px solid #e5e7eb;
+
+            box-shadow:
+                0 8px 25px
+                rgba(15, 23, 42, 0.06);
+
+            margin-bottom: 20px;
+        }
+
+
+        .search-title {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+            color: #111827;
+
+            margin-bottom: 16px;
+        }
+
+
+        .search-form {
+            display: grid;
+
+            grid-template-columns:
+                2fr 1fr 1fr auto;
+
+            gap: 12px;
+        }
+
+
+        input,
+        select {
+            width: 100%;
+
+            min-height: 44px;
+
+            padding: 11px 13px;
+
+            border: 1px solid #d1d5db;
+
+            border-radius: 9px;
+
+            background: white;
+
+            color: #1f2937;
+
+            font-size: 14px;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+
+        input:hover,
+        select:hover {
+            border-color: #a5b4fc;
+        }
+
+
+        input:focus,
+        select:focus {
+            outline: none;
+
+            border-color: #4f46e5;
+
+            box-shadow:
+                0 0 0 4px
+                rgba(79, 70, 229, 0.10);
+        }
+
+
+        select {
+            cursor: pointer;
+        }
+
+
+        .search-btn {
+            min-height: 44px;
+
+            padding: 11px 22px;
+
+            background: #4f46e5;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 9px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            transition:
+                0.2s ease;
+        }
+
+
+        .search-btn:hover {
+            background: #4338ca;
+
+            transform: translateY(-1px);
+        }
+
+
+        .clear-btn {
+            display: inline-block;
+
+            margin-top: 13px;
+
+            color: #6b7280;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+
+        .clear-btn:hover {
+            color: #4f46e5;
+        }
+
+
+        /* =========================
+           SUMMARY
+        ========================= */
+
+        .summary {
+            background: white;
+
+            padding: 20px 24px;
+
+            border-radius: 16px;
+
+            border: 1px solid #e5e7eb;
+
+            box-shadow:
+                0 8px 25px
+                rgba(15, 23, 42, 0.06);
+
+            margin-bottom: 20px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+
+        .summary-label {
+            color: #6b7280;
+
+            font-size: 13px;
+        }
+
+
+        .summary-value {
+            margin-top: 4px;
+
+            font-size: 24px;
+
+            font-weight: 700;
+
+            color: #ef4444;
+        }
+
+
+        .summary-count {
+            display: inline-flex;
+
+            align-items: center;
+
+            padding: 7px 11px;
+
+            border-radius: 20px;
+
+            background: #eef2ff;
+
+            color: #4338ca;
+
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+
+        /* =========================
+           TABLE CARD
+        ========================= */
+
+        .table-card {
+            background: white;
+
+            border-radius: 16px;
+
+            border: 1px solid #e5e7eb;
+
+            box-shadow:
+                0 8px 25px
+                rgba(15, 23, 42, 0.06);
+
+            overflow: hidden;
+        }
+
+
+        .table-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            padding: 20px 22px;
+
+            border-bottom: 1px solid #eef0f4;
+        }
+
+
+        .table-header h2 {
+            font-size: 17px;
+
+            color: #111827;
+        }
+
+
+        .table-header span {
+            color: #9ca3af;
+
+            font-size: 12px;
+        }
+
+
+        .table-wrapper {
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 900px;
+        }
+
+
+        th {
+            background: #f8fafc;
+
+            text-align: left;
+
+            padding: 14px 16px;
+
+            font-size: 11px;
+
+            color: #6b7280;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+
+            white-space: nowrap;
+        }
+
+
+        td {
+            padding: 16px;
+
+            border-top: 1px solid #eef0f4;
+
+            font-size: 14px;
+
+            vertical-align: middle;
+        }
+
+
+        tbody tr {
+            transition:
+                background 0.2s ease;
+        }
+
+
+        tbody tr:hover {
+            background: #fafbff;
+        }
+
+
+        .title-cell {
+            color: #111827;
+
+            font-weight: 600;
+        }
+
+
+        .date-cell {
+            color: #6b7280;
+
+            white-space: nowrap;
+        }
+
+
+        .amount {
+            font-weight: 700;
+
+            color: #ef4444;
+
+            white-space: nowrap;
+        }
+
+
+        .category {
+            display: inline-block;
+
+            background: #eef2ff;
+
+            color: #4338ca;
+
+            padding: 6px 10px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            white-space: nowrap;
+        }
+
+
+        .description {
+            color: #6b7280;
+
+            max-width: 220px;
+        }
+
+
+        /* =========================
+           ACTIONS
+        ========================= */
+
+        .actions {
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+        }
+
+
+        .edit-btn {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #e0e7ff;
+
+            color: #3730a3;
+
+            padding: 8px 10px;
+
+            border-radius: 7px;
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            white-space: nowrap;
+
+            transition:
+                0.2s ease;
+        }
+
+
+        .edit-btn:hover {
+            background: #c7d2fe;
+
+            transform: translateY(-1px);
+        }
+
+
+        .delete-btn {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #fee2e2;
+
+            color: #b91c1c;
+
+            padding: 8px 10px;
+
+            border: none;
+
+            border-radius: 7px;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            white-space: nowrap;
+
+            transition:
+                0.2s ease;
+        }
+
+
+        .delete-btn:hover {
+            background: #fecaca;
+
+            transform: translateY(-1px);
+        }
+
+
+        /* =========================
+           EMPTY STATE
+        ========================= */
+
+        .empty {
+            text-align: center;
+
+            padding: 70px 20px;
+
+            color: #6b7280;
+        }
+
+
+        .empty-icon {
+            width: 70px;
+            height: 70px;
+
+            margin: 0 auto 18px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 18px;
+
+            background: #eef2ff;
+
+            color: #4f46e5;
+
+            font-size: 34px;
+        }
+
+
+        .empty h2 {
+            color: #374151;
+
+            margin-bottom: 8px;
+
+            font-size: 20px;
+        }
+
+
+        .empty p {
+            font-size: 14px;
+
+            margin-bottom: 22px;
+        }
+
+
+        /* =========================
+           PAGINATION
+        ========================= */
+
+        .pagination {
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 22px;
+
+            border-top: 1px solid #eef0f4;
+        }
+
+
+        .page-btn {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 9px 13px;
+
+            min-height: 36px;
+
+            border-radius: 8px;
+
+            text-decoration: none;
+
+            background: #f3f4f6;
+
+            color: #374151;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            transition:
+                0.2s ease;
+        }
+
+
+        .page-btn:hover {
+            background: #e5e7eb;
+
+            transform: translateY(-1px);
+        }
+
+
+        .current-page {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 9px 13px;
+
+            min-height: 36px;
+
+            border-radius: 8px;
+
+            background: #4f46e5;
+
+            color: white;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            box-shadow:
+                0 4px 10px
+                rgba(79, 70, 229, 0.20);
+        }
+
+
+        /* =========================
+           ANIMATION
+        ========================= */
+
+        .search-card,
+        .summary,
+        .table-card {
+            animation: fadeIn 0.35s ease;
+        }
+
+
+        @keyframes fadeIn {
+
+            from {
+                opacity: 0;
+
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+
+                transform: translateY(0);
+            }
+
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 950px) {
+
+            .search-form {
+                grid-template-columns:
+                    1fr 1fr;
+            }
+
+
+            .search-btn {
+                width: 100%;
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .container {
+                padding: 25px 15px;
+            }
+
+
+            .header {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 18px;
+            }
+
+
+            .header-left {
+                align-items: flex-start;
+            }
+
+
+            .page-icon {
+                width: 46px;
+                height: 46px;
+
+                font-size: 21px;
+            }
+
+
+            .header h1 {
+                font-size: 23px;
+            }
+
+
+            .header-buttons {
+                width: 100%;
+            }
+
+
+            .header-buttons a {
+                flex: 1;
+
+                text-align: center;
+            }
+
+
+            .search-card {
+                padding: 18px;
+            }
+
+
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+
+
+            .summary {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 12px;
+
+                padding: 18px;
+            }
+
+
+            .table-header {
+                padding: 17px;
+            }
+
+
+            .table-header span {
+                display: none;
+            }
+
+
+            .empty {
+                padding: 55px 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <div class="header">
+
+
+        <div class="header-left">
+
+
+            <div class="page-icon">
+
+                📋
+
+            </div>
+
+
+            <div>
+
+                <h1>
+
+                    All Expenses
+
+                </h1>
+
+
+                <p>
+
+                    Search, filter and manage your expenses.
+
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="header-buttons">
+
+
+            <a
+                href="{% url 'dashboard' %}"
+                class="back-btn"
+            >
+
+                ← Dashboard
+
+            </a>
+
+
+            <a
+                href="{% url 'add_expense' %}"
+                class="add-btn"
+            >
+
+                + Add Expense
+
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =========================
+         SEARCH / FILTER
+    ========================= -->
+
+    <div class="search-card">
+
+
+        <div class="search-title">
+
+            🔍 Search & Filter
+
+        </div>
+
+
+        <form
+            method="get"
+            class="search-form"
+        >
+
+
+            <!-- SEARCH -->
+
+            <input
+                type="text"
+                name="search"
+                placeholder="Search by title or description..."
+                value="{{ search }}"
+            >
+
+
+            <!-- CATEGORY -->
+
+            <select name="category">
+
+
+                <option value="">
+
+                    All Categories
+
+                </option>
+
+
+                {% for category in categories %}
+
+
+                    <option
+                        value="{{ category.id }}"
+                        {% if selected_category == category.id|stringformat:"s" %}
+                            selected
+                        {% endif %}
+                    >
+
+                        {{ category.name }}
+
+                    </option>
+
+
+                {% endfor %}
+
+
+            </select>
+
+
+            <!-- DATE -->
+
+            <input
+                type="date"
+                name="date"
+                value="{{ selected_date }}"
+            >
+
+
+            <!-- SEARCH BUTTON -->
+
+            <button
+                type="submit"
+                class="search-btn"
+            >
+
+                🔍 Search
+
+            </button>
+
+
+        </form>
+
+
+        <!-- CLEAR FILTERS -->
+
+        {% if search or selected_category or selected_date %}
+
+
+            <a
+                href="{% url 'all_expenses' %}"
+                class="clear-btn"
+            >
+
+                ✖ Clear all filters
+
+            </a>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+    <!-- =========================
+         SUMMARY
+    ========================= -->
+
+    <div class="summary">
+
+
+        <div>
+
+
+            <div class="summary-label">
+
+                Total matching expenses
+
+            </div>
+
+
+            <div class="summary-value">
+
+                Rs. {{ filtered_total|floatformat:2 }}
+
+            </div>
+
+
+        </div>
+
+
+        <div class="summary-count">
+
+            {{ page_obj.paginator.count }}
+            expense{{ page_obj.paginator.count|pluralize }}
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =========================
+         EXPENSE TABLE
+    ========================= -->
+
+    <div class="table-card">
+
+
+        {% if expenses %}
+
+
+            <div class="table-header">
+
+
+                <h2>
+
+                    Expense Records
+
+                </h2>
+
+
+                <span>
+
+                    Manage your transactions
+
+                </span>
+
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+
+                <table>
+
+
+                    <thead>
+
+                        <tr>
+
+
+                            <th>
+
+                                Title
+
+                            </th>
+
+
+                            <th>
+
+                                Category
+
+                            </th>
+
+
+                            <th>
+
+                                Amount
+
+                            </th>
+
+
+                            <th>
+
+                                Date
+
+                            </th>
+
+
+                            <th>
+
+                                Description
+
+                            </th>
+
+
+                            <th>
+
+                                Actions
+
+                            </th>
+
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        {% for expense in expenses %}
+
+
+                            <tr>
+
+
+                                <!-- TITLE -->
+
+                                <td>
+
+                                    <div class="title-cell">
+
+                                        {{ expense.title }}
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- CATEGORY -->
+
+                                <td>
+
+                                    <span class="category">
+
+                                        {{ expense.category.name }}
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- AMOUNT -->
+
+                                <td class="amount">
+
+                                    Rs.
+                                    {{ expense.amount|floatformat:2 }}
+
+                                </td>
+
+
+                                <!-- DATE -->
+
+                                <td class="date-cell">
+
+                                    {{ expense.date }}
+
+                                </td>
+
+
+                                <!-- DESCRIPTION -->
+
+                                <td class="description">
+
+
+                                    {% if expense.description %}
+
+                                        {{ expense.description|truncatechars:40 }}
+
+                                    {% else %}
+
+                                        —
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+                                <!-- ACTIONS -->
+
+                                <td>
+
+
+                                    <div class="actions">
+
+
+                                        <!-- EDIT -->
+
+                                        <a
+                                            href="{% url 'edit_expense' expense.id %}"
+                                            class="edit-btn"
+                                        >
+
+                                            ✏️ Edit
+
+                                        </a>
+
+
+                                        <!-- DELETE -->
+
+                                        <form
+                                            method="post"
+                                            action="{% url 'delete_expense' expense.id %}"
+                                            style="display:inline;"
+                                        >
+
+                                            {% csrf_token %}
+
+
+                                            <button
+                                                type="submit"
+                                                class="delete-btn"
+                                                onclick="return confirm('Are you sure you want to delete this expense?');"
+                                            >
+
+                                                🗑️ Delete
+
+                                            </button>
+
+
+                                        </form>
+
+
+                                    </div>
+
+
+                                </td>
+
+
+                            </tr>
+
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+            <!-- =========================
+                 PAGINATION
+            ========================= -->
+
+            {% if page_obj.paginator.num_pages > 1 %}
+
+
+                <div class="pagination">
+
+
+                    <!-- PREVIOUS -->
+
+                    {% if page_obj.has_previous %}
+
+
+                        <a
+                            class="page-btn"
+                            href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_date %}&date={{ selected_date }}{% endif %}"
+                        >
+
+                            ← Previous
+
+                        </a>
+
+
+                    {% endif %}
+
+
+                    <!-- CURRENT PAGE -->
+
+                    <span class="current-page">
+
+                        Page {{ page_obj.number }}
+
+                        of
+
+                        {{ page_obj.paginator.num_pages }}
+
+                    </span>
+
+
+                    <!-- NEXT -->
+
+                    {% if page_obj.has_next %}
+
+
+                        <a
+                            class="page-btn"
+                            href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_date %}&date={{ selected_date }}{% endif %}"
+                        >
+
+                            Next →
+
+                        </a>
+
+
+                    {% endif %}
+
+
+                </div>
+
+
+            {% endif %}
+
+
+        {% else %}
+
+
+            <!-- =========================
+                 EMPTY STATE
+            ========================= -->
+
+            <div class="empty">
+
+
+                <div class="empty-icon">
+
+                    🧾
+
+                </div>
+
+
+                <h2>
+
+                    No expenses found
+
+                </h2>
+
+
+                <p>
+
+                    Try changing your search or filters.
+
+                </p>
+
+
+                <a
+                    href="{% url 'add_expense' %}"
+                    class="add-btn"
+                >
+
+                    + Add Expense
+
+                </a>
+
+
+            </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

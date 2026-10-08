@@ -1,0 +1,1492 @@
+{% extends 'expenses/base.html' %}
+
+{% block title %}Reports - Expense Tracker{% endblock %}
+
+{% block content %}
+
+<style>
+
+/* =========================================================
+   REPORTS PAGE
+   ========================================================= */
+
+.reports-page {
+    padding: 30px 0 50px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.reports-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.reports-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.reports-title-icon {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: linear-gradient(
+        135deg,
+        #4f46e5,
+        #7c3aed
+    );
+
+    color: white;
+
+    font-size: 23px;
+
+    box-shadow:
+        0 8px 20px rgba(79, 70, 229, 0.25);
+}
+
+.reports-title h2 {
+    margin: 0;
+
+    font-weight: 800;
+
+    letter-spacing: -0.4px;
+}
+
+.reports-title p {
+    margin: 4px 0 0;
+
+    color: #6b7280;
+}
+
+
+/* Dashboard button */
+
+.dashboard-btn {
+    border-radius: 10px;
+
+    padding: 10px 18px;
+
+    font-weight: 600;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.dashboard-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 15px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================================
+   GENERAL CARDS
+   ========================================================= */
+
+.report-card {
+    border: none !important;
+
+    border-radius: 18px !important;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 8px 30px rgba(15, 23, 42, 0.07);
+
+    overflow: hidden;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.report-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 14px 35px rgba(15, 23, 42, 0.10);
+}
+
+
+/* =========================================================
+   FILTER CARD
+   ========================================================= */
+
+.filter-card {
+    margin-bottom: 25px;
+}
+
+.filter-body {
+    padding: 24px;
+}
+
+.filter-label {
+    color: #374151;
+}
+
+.filter-select {
+    min-height: 46px;
+
+    border-radius: 10px;
+
+    border: 1px solid #dbe1ea;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.filter-select:hover {
+    border-color: #b9c2d0;
+}
+
+.filter-select:focus {
+    border-color: #6366f1;
+
+    box-shadow:
+        0 0 0 4px rgba(99, 102, 241, 0.10);
+}
+
+
+/* Apply button */
+
+.filter-btn {
+    min-height: 46px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    font-weight: 650;
+
+    background: linear-gradient(
+        135deg,
+        #4f46e5,
+        #6366f1
+    );
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.filter-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 18px rgba(79, 70, 229, 0.25);
+}
+
+
+/* =========================================================
+   SUMMARY CARDS
+   ========================================================= */
+
+.summary-card {
+    position: relative;
+
+    overflow: hidden;
+}
+
+.summary-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 120px;
+    height: 120px;
+
+    right: -45px;
+    top: -45px;
+
+    border-radius: 50%;
+
+    background: rgba(99, 102, 241, 0.06);
+}
+
+.summary-label {
+    color: #6b7280;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    margin-bottom: 5px;
+}
+
+.summary-value {
+    font-size: 28px;
+
+    font-weight: 800;
+
+    color: #111827;
+
+    letter-spacing: -0.5px;
+}
+
+.summary-icon {
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: #eef2ff;
+
+    color: #4f46e5;
+
+    font-size: 22px;
+
+    position: relative;
+    z-index: 1;
+}
+
+
+/* =========================================================
+   CHART CARDS
+   ========================================================= */
+
+.chart-card-body {
+    padding: 26px;
+}
+
+.chart-header {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 12px;
+
+    margin-bottom: 22px;
+}
+
+.chart-header-icon {
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #eef2ff;
+
+    color: #4f46e5;
+}
+
+.chart-header h5 {
+    margin: 0;
+
+    font-weight: 750;
+
+    color: #1f2937;
+}
+
+.chart-header p {
+    margin: 4px 0 0;
+
+    color: #6b7280;
+
+    font-size: 14px;
+}
+
+
+/* Chart area */
+
+.chart-container {
+    width: 100%;
+
+    height: 350px;
+
+    position: relative;
+}
+
+.category-chart-container {
+    width: 100%;
+
+    max-width: 520px;
+
+    height: 380px;
+
+    margin: 0 auto;
+
+    position: relative;
+}
+
+
+/* =========================================================
+   EMPTY STATES
+   ========================================================= */
+
+.report-empty {
+    padding: 55px 20px;
+
+    text-align: center;
+}
+
+.report-empty-icon {
+    width: 76px;
+    height: 76px;
+
+    margin: 0 auto 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 20px;
+
+    background: #f3f4f6;
+
+    color: #9ca3af;
+
+    font-size: 34px;
+}
+
+.report-empty h5 {
+    font-weight: 750;
+
+    color: #374151;
+}
+
+.report-empty p {
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.report-table {
+    margin-bottom: 0;
+}
+
+.report-table thead th {
+    background: #f8fafc;
+
+    color: #6b7280;
+
+    font-size: 13px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.4px;
+
+    font-weight: 700;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    padding: 14px 16px;
+}
+
+.report-table tbody td {
+    padding: 16px;
+
+    border-color: #f0f2f5;
+
+    color: #374151;
+}
+
+.report-table tbody tr {
+    transition:
+        background 0.2s ease;
+}
+
+.report-table tbody tr:hover {
+    background: #fafbff;
+}
+
+.category-name {
+    font-weight: 700;
+
+    color: #1f2937;
+}
+
+.category-icon {
+    width: 32px;
+    height: 32px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #eef2ff;
+
+    color: #4f46e5;
+}
+
+.transaction-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 6px 10px;
+
+    border-radius: 20px;
+
+    background: #f3f4f6;
+
+    color: #4b5563;
+
+    font-weight: 600;
+
+    font-size: 13px;
+}
+
+.total-amount {
+    color: #111827;
+
+    font-weight: 750;
+}
+
+
+/* =========================================================
+   ALERTS
+   ========================================================= */
+
+.report-alert {
+    border: none;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 5px 18px rgba(15, 23, 42, 0.06);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+    .reports-page {
+        padding-top: 20px;
+    }
+
+    .reports-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .dashboard-btn {
+        width: 100%;
+    }
+
+    .filter-body,
+    .chart-card-body {
+        padding: 20px;
+    }
+
+    .summary-value {
+        font-size: 24px;
+    }
+
+    .chart-container {
+        height: 300px;
+    }
+
+    .category-chart-container {
+        height: 320px;
+    }
+
+}
+
+@media (max-width: 450px) {
+
+    .reports-title h2 {
+        font-size: 22px;
+    }
+
+    .reports-title-icon {
+        width: 46px;
+        height: 46px;
+
+        font-size: 20px;
+    }
+
+    .summary-value {
+        font-size: 22px;
+    }
+
+    .chart-container {
+        height: 260px;
+    }
+
+    .category-chart-container {
+        height: 280px;
+    }
+
+}
+
+</style>
+
+
+<div class="container reports-page">
+
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <div class="reports-header">
+
+        <div class="reports-title">
+
+            <div class="reports-title-icon">
+
+                <i class="bi bi-bar-chart-line"></i>
+
+            </div>
+
+            <div>
+
+                <h2>
+                    Reports & Analytics
+                </h2>
+
+                <p>
+                    Analyze your spending and expenses
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <a href="{% url 'dashboard' %}"
+           class="btn btn-outline-secondary dashboard-btn">
+
+            <i class="bi bi-arrow-left me-1"></i>
+
+            Dashboard
+
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         REPORT FILTER
+         ===================================================== -->
+
+    <div class="card report-card filter-card">
+
+        <div class="filter-body">
+
+            <div class="row align-items-end g-3">
+
+
+                <div class="col-md-8">
+
+                    <label
+                        for="reportFilter"
+                        class="form-label fw-semibold filter-label">
+
+                        <i class="bi bi-funnel me-1"></i>
+
+                        Report Period
+
+                    </label>
+
+
+                    <select
+                        class="form-select filter-select"
+                        id="reportFilter"
+                    >
+
+                        <option
+                            value="all"
+                            {% if report_filter == 'all' %}
+                                selected
+                            {% endif %}
+                        >
+                            All Time
+                        </option>
+
+
+                        <option
+                            value="this_month"
+                            {% if report_filter == 'this_month' %}
+                                selected
+                            {% endif %}
+                        >
+                            This Month
+                        </option>
+
+
+                        <option
+                            value="last_month"
+                            {% if report_filter == 'last_month' %}
+                                selected
+                            {% endif %}
+                        >
+                            Last Month
+                        </option>
+
+
+                        <option
+                            value="this_year"
+                            {% if report_filter == 'this_year' %}
+                                selected
+                            {% endif %}
+                        >
+                            This Year
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <button
+                        type="button"
+                        class="btn btn-primary w-100 filter-btn"
+                        onclick="applyReportFilter()"
+                    >
+
+                        <i class="bi bi-filter me-1"></i>
+
+                        Apply Filter
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SUMMARY CARDS
+         ===================================================== -->
+
+    <div class="row g-4 mb-4">
+
+
+        <!-- Total Spending -->
+
+        <div class="col-md-6">
+
+            <div class="card report-card summary-card h-100">
+
+                <div class="card-body p-4">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <div class="summary-label">
+                                Total Spending
+                            </div>
+
+                            <div class="summary-value">
+
+                                Rs.
+                                {{ total_expenses|floatformat:2 }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="summary-icon">
+
+                            <i class="bi bi-wallet2"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Total Transactions -->
+
+        <div class="col-md-6">
+
+            <div class="card report-card summary-card h-100">
+
+                <div class="card-body p-4">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <div class="summary-label">
+                                Total Transactions
+                            </div>
+
+                            <div class="summary-value">
+                                {{ transaction_count }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="summary-icon">
+
+                            <i class="bi bi-receipt"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         DAILY SPENDING
+         ===================================================== -->
+
+    <div class="card report-card mb-4">
+
+        <div class="chart-card-body">
+
+
+            <div class="chart-header">
+
+                <div class="chart-header-icon">
+
+                    <i class="bi bi-activity"></i>
+
+                </div>
+
+                <div>
+
+                    <h5>
+                        Daily Spending Trend
+                    </h5>
+
+                    <p>
+                        Track your spending day by day
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {% if daily_labels %}
+
+
+                <div class="chart-container">
+
+                    <canvas id="dailyChart"></canvas>
+
+                </div>
+
+
+            {% else %}
+
+
+                <div class="report-empty">
+
+                    <div class="report-empty-icon">
+
+                        <i class="bi bi-activity"></i>
+
+                    </div>
+
+                    <h5>
+                        No daily data yet
+                    </h5>
+
+                    <p class="mb-0">
+                        No expenses found for this period.
+                    </p>
+
+                </div>
+
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MONTHLY SPENDING
+         ===================================================== -->
+
+    <div class="card report-card mb-4">
+
+        <div class="chart-card-body">
+
+
+            <div class="chart-header">
+
+                <div class="chart-header-icon">
+
+                    <i class="bi bi-graph-up"></i>
+
+                </div>
+
+                <div>
+
+                    <h5>
+                        Monthly Spending
+                    </h5>
+
+                    <p>
+                        Track how your spending changes over time
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {% if month_labels %}
+
+
+                <div class="chart-container">
+
+                    <canvas id="monthlyChart"></canvas>
+
+                </div>
+
+
+            {% else %}
+
+
+                <div class="report-empty">
+
+                    <div class="report-empty-icon">
+
+                        <i class="bi bi-graph-up"></i>
+
+                    </div>
+
+                    <h5>
+                        No monthly data yet
+                    </h5>
+
+                    <p class="mb-0">
+                        No expenses found for this period.
+                    </p>
+
+                </div>
+
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         CATEGORY CHART
+         ===================================================== -->
+
+    <div class="card report-card mb-4">
+
+        <div class="chart-card-body">
+
+
+            <div class="chart-header">
+
+                <div class="chart-header-icon">
+
+                    <i class="bi bi-pie-chart"></i>
+
+                </div>
+
+                <div>
+
+                    <h5>
+                        Spending by Category
+                    </h5>
+
+                    <p>
+                        Visual breakdown of your spending
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {% if chart_labels %}
+
+
+                <div class="category-chart-container">
+
+                    <canvas id="categoryChart"></canvas>
+
+                </div>
+
+
+            {% else %}
+
+
+                <div class="report-empty">
+
+                    <div class="report-empty-icon">
+
+                        <i class="bi bi-pie-chart"></i>
+
+                    </div>
+
+                    <h5>
+                        No category data
+                    </h5>
+
+                    <p class="mb-0">
+                        No expenses found for this period.
+                    </p>
+
+                </div>
+
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         CATEGORY REPORT TABLE
+         ===================================================== -->
+
+    <div class="card report-card">
+
+        <div class="chart-card-body">
+
+
+            <div class="chart-header">
+
+                <div class="chart-header-icon">
+
+                    <i class="bi bi-table"></i>
+
+                </div>
+
+                <div>
+
+                    <h5>
+                        Spending Details
+                    </h5>
+
+                    <p>
+                        See how your spending is distributed
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {% if category_report %}
+
+
+                <div class="table-responsive">
+
+                    <table class="table align-middle report-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Category
+                                </th>
+
+                                <th>
+                                    Transactions
+                                </th>
+
+                                <th>
+                                    Total Spent
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+
+                            {% for category in category_report %}
+
+                                <tr>
+
+                                    <td>
+
+                                        <span class="category-icon me-2">
+
+                                            <i class="bi bi-tag"></i>
+
+                                        </span>
+
+                                        <span class="category-name">
+
+                                            {{ category.name }}
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <span class="transaction-badge">
+
+                                            {{ category.expense_count }}
+
+                                            {% if category.expense_count == 1 %}
+                                                expense
+                                            {% else %}
+                                                expenses
+                                            {% endif %}
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <strong class="total-amount">
+
+                                            Rs.
+                                            {{ category.total_spent|default:0|floatformat:2 }}
+
+                                        </strong>
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+            {% else %}
+
+
+                <div class="report-empty">
+
+                    <div class="report-empty-icon">
+
+                        <i class="bi bi-bar-chart"></i>
+
+                    </div>
+
+                    <h5>
+                        No report data yet
+                    </h5>
+
+                    <p class="mb-0">
+                        No expenses found for this period.
+                    </p>
+
+                </div>
+
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     CHART.JS
+     ========================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<!-- =========================================================
+     DJANGO CHART DATA
+     ========================================================= -->
+
+{{ chart_labels|json_script:"chart-labels" }}
+
+{{ chart_values|json_script:"chart-values" }}
+
+{{ month_labels|json_script:"month-labels" }}
+
+{{ month_values|json_script:"month-values" }}
+
+{{ daily_labels|json_script:"daily-labels" }}
+
+{{ daily_values|json_script:"daily-values" }}
+
+
+<script>
+
+/* =========================================================
+   REPORT FILTER
+   ========================================================= */
+
+function applyReportFilter() {
+
+    const filter =
+        document.getElementById('reportFilter').value;
+
+    window.location.href =
+        "{% url 'reports' %}?filter=" + filter;
+
+}
+
+
+/* =========================================================
+   CATEGORY DATA
+   ========================================================= */
+
+const chartLabels = JSON.parse(
+    document.getElementById('chart-labels').textContent
+);
+
+const chartValues = JSON.parse(
+    document.getElementById('chart-values').textContent
+);
+
+
+/* =========================================================
+   MONTHLY DATA
+   ========================================================= */
+
+const monthLabels = JSON.parse(
+    document.getElementById('month-labels').textContent
+);
+
+const monthValues = JSON.parse(
+    document.getElementById('month-values').textContent
+);
+
+
+/* =========================================================
+   DAILY DATA
+   ========================================================= */
+
+const dailyLabels = JSON.parse(
+    document.getElementById('daily-labels').textContent
+);
+
+const dailyValues = JSON.parse(
+    document.getElementById('daily-values').textContent
+);
+
+
+/* =========================================================
+   DAILY CHART
+   ========================================================= */
+
+const dailyChartElement =
+    document.getElementById('dailyChart');
+
+
+if (dailyChartElement) {
+
+    new Chart(
+        dailyChartElement,
+        {
+            type: 'line',
+
+            data: {
+
+                labels: dailyLabels,
+
+                datasets: [
+                    {
+                        label: 'Daily Spending (Rs.)',
+
+                        data: dailyValues,
+
+                        borderWidth: 3,
+
+                        tension: 0.3,
+
+                        fill: false,
+
+                        pointRadius: 4,
+
+                        pointHoverRadius: 6
+                    }
+                ]
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+
+                            callback: function(value) {
+
+                                return 'Rs. ' + value;
+
+                            }
+
+                        }
+
+                    }
+
+                },
+
+                plugins: {
+
+                    legend: {
+                        display: true
+                    },
+
+                    tooltip: {
+
+                        callbacks: {
+
+                            label: function(context) {
+
+                                return ' Rs. ' +
+                                    Number(context.raw).toFixed(2);
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   MONTHLY CHART
+   ========================================================= */
+
+const monthlyChartElement =
+    document.getElementById('monthlyChart');
+
+
+if (monthlyChartElement) {
+
+    new Chart(
+        monthlyChartElement,
+        {
+            type: 'bar',
+
+            data: {
+
+                labels: monthLabels,
+
+                datasets: [
+                    {
+                        label: 'Monthly Spending (Rs.)',
+
+                        data: monthValues,
+
+                        borderWidth: 1,
+
+                        borderRadius: 8,
+
+                        maxBarThickness: 55
+                    }
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+
+                            callback: function(value) {
+
+                                return 'Rs. ' + value;
+
+                            }
+
+                        }
+
+                    }
+
+                },
+
+                plugins: {
+
+                    tooltip: {
+
+                        callbacks: {
+
+                            label: function(context) {
+
+                                return ' Rs. ' +
+                                    Number(context.raw).toFixed(2);
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   CATEGORY CHART
+   ========================================================= */
+
+const categoryChartElement =
+    document.getElementById('categoryChart');
+
+
+if (categoryChartElement) {
+
+    new Chart(
+        categoryChartElement,
+        {
+            type: 'doughnut',
+
+            data: {
+
+                labels: chartLabels,
+
+                datasets: [
+                    {
+                        label: 'Spending',
+
+                        data: chartValues,
+
+                        borderWidth: 2,
+
+                        hoverOffset: 8
+                    }
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                cutout: '62%',
+
+                plugins: {
+
+                    legend: {
+
+                        position: 'bottom',
+
+                        labels: {
+                            padding: 18
+                        }
+
+                    },
+
+                    tooltip: {
+
+                        callbacks: {
+
+                            label: function(context) {
+
+                                return ' Rs. ' +
+                                    Number(context.raw).toFixed(2);
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+}
+
+</script>
+
+{% endblock %}
